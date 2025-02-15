@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { ThemeProvider, useTheme } from "../hooks/ThemeContext"; // Import ThemeProvider
+import { FilterProvider } from "../hooks/FilterContext"; // Import FilterProvider
 
 // Prevent splash screen from hiding before assets load
 SplashScreen.preventAutoHideAsync();
@@ -24,16 +25,18 @@ export default function RootLayout() {
 
     return (
         <ThemeProvider>
-            <Stack>
-                <Stack.Screen
-                    name="index"
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name="CountryDetails"
-                    options={{ title: "Country Details", headerShown: false }}
-                />
-            </Stack>
+            <FilterProvider>
+                <Stack>
+                    <Stack.Screen
+                        name="index"
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="CountryDetails"
+                        options={{ title: "Country Details", headerShown: false }}
+                    />
+                </Stack>
+            </FilterProvider>
         </ThemeProvider>
     );
 }

@@ -5,9 +5,11 @@ import CountryService from '../service/CountryService';
 import Loading from './Loading';
 import { theme } from '../app/theme';
 import { useTheme } from '@/hooks/ThemeContext';
+import { useFilter } from '@/hooks/FilterContext';
 
 const CountryList = ({ searchText }) => {
     const { theme } = useTheme();
+    const { selectedContinents, selectedTimezones } = useFilter(); // Get filter values from context
 
     const [countries, setCountries] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -46,13 +48,17 @@ const CountryList = ({ searchText }) => {
         }));
     };
 
-    // Filter countries based on searchText
     const filteredCountries = countries.map(section => ({
         title: section.title,
         data: section.data.filter(country =>
-            country.name.common.toLowerCase().includes(searchText.toLowerCase())
+            country.name.common.toLowerCase().includes(searchText.toLowerCase()) &&
+            (selectedContinents.length === 0 || selectedContinents.includes(country.region)) &&
+            (selectedTimezones.length === 0 || country.timezones.some(tz =>
+                selectedTimezones.some(selectedTZ => tz.includes(selectedTZ))
+            ))
         )
-    })).filter(section => section.data.length > 0); // Remove empty sections
+    })).filter(section => section.data.length > 0);
+
 
     if (isLoading) {
         return <Loading />;
@@ -62,11 +68,11 @@ const CountryList = ({ searchText }) => {
         <View style={styles.container}>
             <SectionList
                 sections={filteredCountries}
-                style={{color: theme.text}}
+                style={{ color: theme.text }}
                 keyExtractor={(item) => item?.name?.common || Math.random().toString()}
                 renderItem={({ item }) => item ? <CountryCard country={item} /> : null}
                 renderSectionHeader={({ section: { title } }) => (
-                    <Text style={[styles.header, {color: theme.text}]}>{title}</Text>
+                    <Text style={[styles.header, { color: theme.text }]}>{title}</Text>
                 )}
             />
         </View>

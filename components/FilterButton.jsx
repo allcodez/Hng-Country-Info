@@ -4,15 +4,15 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/ThemeContext';
 import FilterList from './FilterList';
 
-const FilterButton = ({ visible, onClose }) => {
+const FilterButton = ({ visible, onClose, setSelectedContinents, setSelectedTimezones }) => {
     const { theme } = useTheme();
-    const slideAnim = useRef(new Animated.Value(700)).current; // Start off-screen
+    const slideAnim = useRef(new Animated.Value(700)).current;
 
     useEffect(() => {
         if (visible) {
             slideAnim.setValue(700);
             Animated.timing(slideAnim, {
-                toValue: 20, // Slide into view
+                toValue: 20,
                 duration: 300,
                 useNativeDriver: true,
             }).start();
@@ -21,7 +21,6 @@ const FilterButton = ({ visible, onClose }) => {
 
     return (
         <>
-            {/* Filter Button */}
             <TouchableOpacity style={[styles.container, { borderColor: theme.border }]} onPress={onClose}>
                 <View style={styles.iconContainer}>
                     <Feather name="filter" size={23} color={theme.text} />
@@ -29,11 +28,14 @@ const FilterButton = ({ visible, onClose }) => {
                 <Text style={[styles.filterText, { color: theme.text }]}>Filter</Text>
             </TouchableOpacity>
 
-            {/* Modal for Filter List */}
             <Modal transparent visible={visible} animationType="fade">
                 <View style={styles.modalOverlay}>
                     <Animated.View style={[styles.modalContent, { backgroundColor: theme.background, transform: [{ translateY: slideAnim }] }]}>
-                        <FilterList onClose={onClose} />
+                        <FilterList
+                            onClose={onClose}
+                            setSelectedContinents={setSelectedContinents}
+                            setSelectedTimezones={setSelectedTimezones}
+                        />
                     </Animated.View>
                 </View>
             </Modal>
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     modalContent: {
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
-        height: 250,
+        height: 220,
         padding: 20,
     },
 });

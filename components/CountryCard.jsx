@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         // backgroundColor: '#f8f9fa',
         borderRadius: 8,
         marginVertical: 10,
-        elevation: 3,
     },
     flag: {
         width: 50,

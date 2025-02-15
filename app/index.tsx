@@ -12,12 +12,16 @@ import { useTheme } from "@/hooks/ThemeContext";
 const { width, height } = Dimensions.get('window');
 
 export default function Index() {
-	const { theme, toggleTheme, themeMode } = useTheme();
-
+	const { theme } = useTheme();
 	const navigation = useNavigation();
+
 	const [searchText, setSearchText] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
+
+	// Store selected filters
+	const [selectedContinents, setSelectedContinents] = useState([]);
+	const [selectedTimezones, setSelectedTimezones] = useState([]);
 
 	const toggleModal = () => {
 		setModalVisible(!modalVisible);
@@ -28,17 +32,23 @@ export default function Index() {
 			<KeyboardAvoidingView behavior="padding" enabled>
 				<CustomHeader navigation={navigation} />
 
-				{/* Pass searchText and setSearchText to SearchBar */}
 				<SearchBar searchText={searchText} setSearchText={setSearchText} />
 
 				<View style={styles.containerFilter}>
-
 					<LanguageFilter visible={modalVisible} onClose={toggleModal} />
-					<FilterButton visible={modalVisible2} onClose={() => setModalVisible2(!modalVisible2)} />
+					<FilterButton
+						visible={modalVisible2}
+						onClose={() => setModalVisible2(!modalVisible2)}
+						setSelectedContinents={setSelectedContinents}
+						setSelectedTimezones={setSelectedTimezones}
+					/>
 				</View>
 
-				{/* Pass searchText to CountryList */}
-				<CountryList searchText={searchText} />
+				<CountryList
+					searchText={searchText}
+					selectedContinents={selectedContinents}
+					selectedTimezones={selectedTimezones}
+				/>
 			</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
